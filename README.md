@@ -1,6 +1,4 @@
-<p align="center">
 # Abiturient
-</p>
 
 ## Description
 
