@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth/auth.service';
 
 @Controller()
-@Dependencies(AppService, AuthService)
+  @Dependencies(AppService, AuthService)
 export class AppController {
   constructor(appService, authService) {
     this.appService = appService;
