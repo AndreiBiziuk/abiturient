@@ -11,7 +11,7 @@ export class OrmService {
     checkTableName(table){
         const pseudo = {
             users:"tUsers",
-            abiturs:"tAbiturs",
+            abiturs:"tAbitur",
             options:"options",
             docs:"tDocs",
             plan:"tPlanPriema",
