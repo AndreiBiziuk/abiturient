@@ -14,8 +14,8 @@ export class AuthService {
   async validateUser(username, pass) {
     const user = await this.usersService.findOne(username);
     //console.log(bcrypt.hashSync(pass, 10));
-    console.log(user);
-    if (user && bcrypt.compareSync(pass, user.hash)) {
+    //console.log(user);
+    if (user.hash && bcrypt.compareSync(pass, user.hash)) {
       const { hash, ...result } = user;
       return result;
     }
