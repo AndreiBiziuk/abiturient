@@ -38,12 +38,51 @@ export class OrmService {
 
     async getPage(params, req) {
         //console.log('abiturs/page ', params, req.query);
+        let table = "";
+        if (!(table = this.checkTableName(params.entity))) throw new HttpException("Not Found", 404);
         return this.db.getPage(
-            params.entity,
+            table,
             params.page,
             params.size,
             params.sort,
             params.filter
         );
+    }
+
+    async updateValues(params, req){
+        let table = "";
+        if (!(table = this.checkTableName(params.entity))) throw new HttpException("Not Found", 404);
+
+        //console.log(req);
+
+        return this.db.updateValues(
+            table,
+            params.keyvalue,
+            req.body.names,
+            req.body.values
+        )
+    }
+
+    async insertValues(params, req) {
+        let table = "";
+        if (!(table = this.checkTableName(params.entity))) throw new HttpException("Not Found", 404);
+
+        //console.log(req);
+
+        return this.db.insertValues(
+            table,
+            req.body.names,
+            req.body.values
+        )
+    }
+
+    async deleteValues(params, req){
+        let table = "";
+        if (!(table = this.checkTableName(params.entity))) throw new HttpException("Not Found", 404);
+
+        return this.db.deleteValues(
+            table,
+            params.keyvalue
+        )
     }
 }

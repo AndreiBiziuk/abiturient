@@ -3,6 +3,9 @@ import {
     Dependencies,
     Bind,
     Get,
+    Put,
+    Post,
+    Delete,
     Req,
     Param,
     UseGuards,
@@ -33,5 +36,29 @@ export class OrmController {
     getPage(params, req) {
         //console.log('abiturs/page ', params, req.query);
         return this.ormService.getPage(params, req);
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Put(':entity/:keyvalue')
+    @Bind(Param(), Req())
+    updateValues(params, req) {
+        //console.log('abiturs/page ', params, req.query);
+        return this.ormService.updateValues(params, req);
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Post(':entity')
+    @Bind(Param(), Req())
+    insertValues(params, req) {
+        //console.log('abiturs/page ', params, req.query);
+        return this.ormService.insertValues(params, req);
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Delete(':entity/:keyvalue')
+    @Bind(Param(), Req())
+    deleteValues(params, req) {
+        //console.log('abiturs/page ', params, req.query);
+        return this.ormService.deleteValues(params, req);
     }
 }
