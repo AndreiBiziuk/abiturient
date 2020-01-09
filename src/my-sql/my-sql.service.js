@@ -79,6 +79,33 @@ export class MySqlService {
     return result[0];
   }
 
+  async getLinesCount(table, filter = '') {
+    let where = '';
+
+    const fltr = filter && filter.split(';').map(f => f.split(','));
+
+    if (fltr && fltr.length > 0) {
+      where += 'WHERE ';
+
+      let fieldList = await this.getFieldList(table);
+      console.log(fltr);
+      where += fltr
+        .map(f => `${fieldList[f[0] * 1 - 1]} LIKE '%${f[1]}%'`)
+        .join(' AND ');
+      where += ' ';
+    }
+
+    const sql = `SELECT count(*) as linescount from ${table} ${where};`;
+
+    let response = await this.querySQL(sql);
+    let result = 0;
+    if (response[0] && response[0][0] && response[0][0]['linescount']){
+      result = response[0][0];
+    }
+
+    return result;
+  }
+
   async updateValues(table, keyValue, names=[], values=[]){
     
     const keyField = await this.getKeyField(table);
