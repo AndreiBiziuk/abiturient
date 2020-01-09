@@ -36,6 +36,14 @@ export class OrmService {
         
     }
 
+    async getFields(params, req) {
+        let table = "";
+        if (!(table = this.checkTableName(params.entity))) throw new HttpException("Not Found", 404);
+        return this.db.getFieldList(
+            table
+        );
+    }
+
     async getPage(params, req) {
         //console.log('abiturs/page ', params, req.query);
         let table = "";
@@ -46,6 +54,24 @@ export class OrmService {
             params.size,
             params.sort,
             params.filter
+        );
+    }
+
+    async getLinesCount(params, req) {
+        //console.log('abiturs/page ', params, req.query);
+        let table = "";
+        if (!(table = this.checkTableName(params.entity))) throw new HttpException("Not Found", 404);
+        return this.db.getLinesCount(
+            table,
+            params.filter
+        );
+    }
+
+    async getLinesCountWithoutFilter(params, req) {
+        let table = "";
+        if (!(table = this.checkTableName(params.entity))) throw new HttpException("Not Found", 404);
+        return this.db.getLinesCount(
+            table
         );
     }
 
