@@ -11,7 +11,20 @@ export class OrmService {
     checkTableName(table){
         const pseudo = {
             users:"tUsers",
-            abiturs:"tAbitur",
+            abiturs: `(SELECT concat(IFNULL(tAbitur.Фамилия,''),' ',IFNULL(tAbitur.Имя,''),' ',IFNULL(tAbitur.Отчество,''))as ФИО,
+		 tZajav.Шифр, vwSummaBalls.Балл_100 as Балл, tAbiturStatus.Статус,
+            tSpec.Название as Специальность,
+		 (concat(tEduForma.Форма_обучения, (case tPlanPriema.idEduLevel when 2 then ' (ссо)' else '' end))) as Форма,
+            tEduOplata.Оплата_обучения as Оплата,
+            tZajav.iDate as Дата
+        FROM \`tAbitur\`
+        left join tZajav on tAbitur.idAbitur = tZajav.idAbitur
+        left join tAbiturStatus on tZajav.idAbiturStatus = tAbiturStatus.idAbiturStatus
+        left join vwSummaBalls on vwSummaBalls.idAbitur = tAbitur.idAbitur and vwSummaBalls.idPlanPriema = tZajav.currentPlanPriemaId
+        left join tPlanPriema on tPlanPriema.idPlanPriema = tZajav.currentPlanPriemaId
+        left join tEduForma on tEduForma.idEduForma = tPlanPriema.idEduForma
+        left join tEduOplata on tEduOplata.idEduOplata = tPlanPriema.idEduoplata
+        left join tSpec on tSpec.idSpec = tPlanPriema.idSpec) as q1`,
             options:"options",
             docs:"tDocs",
             plan:"tPlanPriema",

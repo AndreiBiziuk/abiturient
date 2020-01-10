@@ -53,6 +53,7 @@ export class MySqlService {
     const limit = size * 1;
     const order = sort
       .split(',')
+      .filter(s => s != 0)
       .map(v => (v > 0 ? `${v * 1} ASC` : `${-v * 1} DESC`));
 
     let where = '';
@@ -65,18 +66,28 @@ export class MySqlService {
       let fieldList = await this.getFieldList(table);
       console.log(fltr);
       where += fltr
-        .map(f => `${fieldList[f[0] * 1 - 1]} LIKE '%${f[1]}%'`)
+        .map(f => `${fieldList[f[0] * 1 - 1]} LIKE ${this.db.escape('%' + this.escapeBadSymbols(f[1]) + '%')}`)
         .join(' AND ');
       where += ' ';
     }
 
+    const orderString = order.length ? `order by ${order.join()} `:"";
+
     const sql = this.db.format(
-      `SELECT * from ${table} ${where}order by ${order.join()} limit ? offset ?;`,
+      `SELECT * from ${table} ${where}${orderString}limit ? offset ?;`,
       [limit, offset],
     );
 
+    console.log(sql);
+
     let result = await this.querySQL(sql);
     return result[0];
+  }
+
+  escapeBadSymbols(str){
+    let result = decodeURIComponent(Buffer.from(str, 'base64').toString());
+    result = result.replace(/[%?\\]/g,'-');
+    return result;
   }
 
   async getLinesCount(table, filter = '') {
@@ -90,7 +101,7 @@ export class MySqlService {
       let fieldList = await this.getFieldList(table);
       console.log(fltr);
       where += fltr
-        .map(f => `${fieldList[f[0] * 1 - 1]} LIKE '%${f[1]}%'`)
+        .map(f => `${fieldList[f[0] * 1 - 1]} LIKE ${this.db.escape('%'+this.escapeBadSymbols(f[1])+'%')}`)
         .join(' AND ');
       where += ' ';
     }
