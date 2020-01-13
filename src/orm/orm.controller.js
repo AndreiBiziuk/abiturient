@@ -62,6 +62,13 @@ export class OrmController {
     }
 
     @UseGuards(AuthGuard('jwt'))
+    @Get(':entity/:keyvalue')
+    @Bind(Param(), Req())
+    getOneRow(params, req) {
+        return this.ormService.getOneRow(params, req);
+    }
+
+    @UseGuards(AuthGuard('jwt'))
     @Put(':entity/:keyvalue')
     @Bind(Param(), Req())
     updateValues(params, req) {

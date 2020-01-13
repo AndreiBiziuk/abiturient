@@ -45,7 +45,27 @@ export class MySqlService {
     );
 
     const result = await this.querySQL(sql);
-    return result[0][0]['COLUMN_NAME'];
+
+    if (result[0][0] && result[0][0]['COLUMN_NAME'] && result[0][0]['COLUMN_NAME'].length > 0){
+      return result[0][0]['COLUMN_NAME']
+    }else{
+      const fields = await this.getFieldList(table);
+      //console.log(fields);
+      return fields[0];
+    }
+  }
+
+  async getOneRow(table, key){
+
+    const keyField = this.getKeyField(table);
+
+    const sql = this.db.format(
+      `SELECT * from ${table} where ?? = ?;`,
+      [await keyField, key]
+    );
+
+    let result = await this.querySQL(sql);
+    return result[0];
   }
 
   async getPage(table, page = 0, size = 10, sort = '1', filter = '') {
@@ -64,7 +84,7 @@ export class MySqlService {
       where += 'WHERE ';
 
       let fieldList = await this.getFieldList(table);
-      console.log(fltr);
+      //console.log(fltr);
       where += fltr
         .map(f => `${fieldList[f[0] * 1 - 1]} LIKE ${this.db.escape('%' + this.escapeBadSymbols(f[1]) + '%')}`)
         .join(' AND ');
@@ -78,7 +98,7 @@ export class MySqlService {
       [limit, offset],
     );
 
-    console.log(sql);
+    //console.log(sql);
 
     let result = await this.querySQL(sql);
     return result[0];
@@ -99,7 +119,7 @@ export class MySqlService {
       where += 'WHERE ';
 
       let fieldList = await this.getFieldList(table);
-      console.log(fltr);
+      //console.log(fltr);
       where += fltr
         .map(f => `${fieldList[f[0] * 1 - 1]} LIKE ${this.db.escape('%'+this.escapeBadSymbols(f[1])+'%')}`)
         .join(' AND ');
