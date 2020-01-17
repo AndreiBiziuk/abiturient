@@ -11,7 +11,7 @@ export class OrmService {
     checkTableName(table){
         const pseudo = {
             users:"tUsers",
-            abitursFull:"tAbiturs",
+            abitursFull:"tAbitur",
             abiturs: `(SELECT tAbitur.idAbitur as id, concat(IFNULL(tAbitur.Фамилия,''),' ',IFNULL(tAbitur.Имя,''),' ',IFNULL(tAbitur.Отчество,''))as ФИО,
 		 tZajav.Шифр, vwSummaBalls.Балл_100 as Балл, tAbiturStatus.Статус,
             tSpec.Название as Специальность,
