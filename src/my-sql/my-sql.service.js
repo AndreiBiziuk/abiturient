@@ -11,6 +11,13 @@ export class MySqlService {
       user: process.env.DB_USER,
       database: process.env.DB_DBNAME,
       password: process.env.DB_PASS,
+      typeCast: function (field, next) {
+        if (field.type === 'DATETIME' ) {
+          return field.string();
+        } else {
+          return next();
+        }
+      }
     });
 
     this.db = pool;
